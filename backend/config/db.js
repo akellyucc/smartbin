@@ -1,5 +1,5 @@
 const mysql = require('mysql');
-
+/*
 // Create a connection pool
 const pool = mysql.createPool({
   connectionLimit: 10,  // Adjust the limit based on your needs
@@ -7,6 +7,16 @@ const pool = mysql.createPool({
   user: 'smrlsmc_smartbin',         // Your MySQL username
   password: 'andrew@kelly', // Your MySQL password
   database: 'smarlsmc_smartbin', // Your MySQL database name
+});
+*/
+
+// Create a connection pool
+const pool = mysql.createPool({
+  connectionLimit: 100,  // Adjust the limit based on your needs
+  host: process.env.DB_HOST,    // Replace with your MySQL host, e.g., '127.0.0.1'
+  user: process.env.DB_USERNAME,         // Your MySQL username
+  password: process.env.DB_PASSWORD, // Your MySQL password
+  database: process.env.DB_DATABASE, // Your MySQL database name
 });
 
 // Function to connect to the database
