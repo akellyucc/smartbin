@@ -12,9 +12,9 @@ const Dashboard = () => {
   const [binDetails, setBinDetails] = useState(null);
   const [selectedMetric, setSelectedMetric] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
-  const [activeRoutes, setActiveRoutes] = useState(0);
+  //const [activeRoutes, setActiveRoutes] = useState(0);
   const [activeRoutesDetails, setActiveRoutesDetails] = useState(0);
-  const [totalWasteCollected, setTotalWasteCollected] = useState('1,200 kg'); // Change to dynamic if needed
+  //const [totalWasteCollected, setTotalWasteCollected] = useState('1,200 kg'); // Change to dynamic if needed
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,7 +55,8 @@ const Dashboard = () => {
     { title: 'Near Full Bins', value: nearFullBins, icon: '⚠️', details: 'nearFullBinsDetails' },
     { title: 'Last Collection', value: 'Sep 14, 2024', icon: '📅' },
      { title: 'Active Routes ', value: 5, icon: '🚚', details: 'activeRoutesDetails' },
-    { title: 'Total Waste Collected', value: totalWasteCollected, icon: '⚖️' },
+    { title: 'Total Waste Collected', value: 25, icon: '⚖️' },
+    //{ title: 'Total Waste Collected', value: totalWasteCollected, icon: '⚖️' },
   ];
 
   const handleMetricClick = (metric) => {

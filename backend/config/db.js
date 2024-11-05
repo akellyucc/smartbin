@@ -12,11 +12,11 @@ const pool = mysql.createPool({
 
 // Create a connection pool
 const pool = mysql.createPool({
-  connectionLimit: 100,  // Adjust the limit based on your needs
-  host: process.env.DB_HOST,    // Replace with your MySQL host, e.g., '127.0.0.1'
-  user: process.env.DB_USERNAME,         // Your MySQL username
-  password: process.env.DB_PASSWORD, // Your MySQL password
-  database: process.env.DB_DATABASE, // Your MySQL database name
+    connectionLimit: 10,
+    host: process.env.DB_HOST,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD, // Be careful with sensitive information
+    database: process.env.DB_NAME,
 });
 
 // Function to connect to the database

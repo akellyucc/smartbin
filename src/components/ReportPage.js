@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   BarChart,
   PieChart,
@@ -19,7 +19,7 @@ const WasteManagementReport = ({ reportData, selectedParish }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const defaultReportData = {
+  const defaultReportData = useMemo(() => ({
     totalWaste: 1500,
     wasteByType: [
       { name: 'Plastic', value: 600 },
@@ -42,39 +42,36 @@ const WasteManagementReport = ({ reportData, selectedParish }) => {
       { month: 'November', amount: 400 },
       { month: 'December', amount: 500 },
     ],
-
     recyclables: [
       { bin_type: "Recyclable", total_amount: 800 },
       { bin_type: "Non-Recyclable", total_amount: 700 }
     ],
-  };
+  }), []);
 
   useEffect(() => {
     const fetchData = async () => {
-      if (selectedParish) {
-        try {
-          // Replace with your actual API call
-           const result = await binService.fetchReportByParish(selectedParish);
-           setData(result);
-          //setData(defaultReportData); // For demonstration purposes, using default data
-        } catch (err) {
-          setError('Failed to fetch report data');
-        } finally {
-          setLoading(false);
+      setLoading(true); // Set loading to true before fetching
+      try {
+        if (selectedParish) {
+          const result = await binService.fetchReportByParish(selectedParish);
+          setData(result);
+        } else {
+          setData(defaultReportData); // Use default data if no parish is selected
         }
-      } else {
-        setData(defaultReportData); // Use default data if no parish is selected
+      } catch (err) {
+        setError('Failed to fetch report data');
+      } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [selectedParish]);
+  }, [selectedParish, defaultReportData]); // Add defaultReportData to dependencies
 
   if (loading) return <p>Loading report...</p>;
   if (error) return <p className="error">{error}</p>;
 
-  const { totalWaste, wasteByType, wasteTrends,recyclables } = data;
+  const { totalWaste, wasteByType, wasteTrends, recyclables } = data;
 
   return (
     <div className="report-page">
@@ -132,10 +129,8 @@ const WasteManagementReport = ({ reportData, selectedParish }) => {
             </BarChart>
           </div>
         </section>
-      </div>
 
-
-<section className="section">
+        <section className="section">
           <h3>Bin Types: Recyclables vs Non-Recyclables</h3>
           <div className="chart-container">
             <PieChart className="pie-chart" width={400} height={400}>
@@ -159,23 +154,20 @@ const WasteManagementReport = ({ reportData, selectedParish }) => {
           </div>
         </section>
 
+        <section className="section recommendations">
+          <h2>Recommendations</h2>
+          <ul>
+            <li>Increase recycling efforts for plastic waste.</li>
+            <li>Implement community awareness programs.</li>
+            <li>Conduct regular audits of waste management practices.</li>
+            <li>Explore partnerships with local recycling facilities.</li>
+          </ul>
+        </section>
 
-
-
-
-      <section className="section recommendations">
-        <h2>Recommendations</h2>
-        <ul>
-          <li>Increase recycling efforts for plastic waste.</li>
-          <li>Implement community awareness programs.</li>
-          <li>Conduct regular audits of waste management practices.</li>
-          <li>Explore partnerships with local recycling facilities.</li>
-        </ul>
-      </section>
-
-      <footer className="report-footer">
-        <p>Contact us: smartbins@smartbinsmanagement.com</p>
-      </footer>
+        <footer className="report-footer">
+          <p>Contact us: smartbins@smartbinsmanagement.com</p>
+        </footer>
+      </div>
     </div>
   );
 };

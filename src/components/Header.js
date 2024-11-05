@@ -16,7 +16,7 @@ const Header = ({ onParishChange }) => {
     setSelectedCountry(country);
     setIsDropdownOpen(false); // Close dropdown
   };
-
+  console.log(selectedCountry);
   const handleParishChange = (parish) => {
     console.log('Selected Parish in Header:', parish); // Debugging
     onParishChange(parish); // Update the selected parish in the parent component

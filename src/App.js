@@ -5,7 +5,6 @@ import Dashboard from './components/Dashboard';
 import Map from './components/Map';
 import Notifications from './components/Notifications';
 import ActionButtons from './components/ActionButtons';
-import FullBinsDetails from './components/BinDetails';
 import ReportPage from './components/ReportPage';
 import SchedulePickup from './components/SchedulePickup';
 import './App.css';
