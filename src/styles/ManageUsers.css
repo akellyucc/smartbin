@@ -1,0 +1,30 @@
+.manage-users {
+  margin: 30px auto;
+  max-width: 900px;
+  padding: 20px;
+  background-color: #f4f4f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.manage-users-container h2 {
+  color: #333;
+}
+.users-table th {
+    background-color: #4CAF50;
+
+}
+.manage-users-container button {
+  font-weight: bold;
+}
+
+.manage-users-container .table {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.manage-users-container .modal-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}

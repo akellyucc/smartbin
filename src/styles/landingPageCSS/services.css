@@ -1,0 +1,294 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+
+header {
+    background-color: #4caf50;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+}
+
+header .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+header h1 {
+    font-size: 1.8rem;
+}
+
+header nav ul {
+    display: flex;
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+#logo-video {
+    width: 50px;
+    height: auto;
+    margin-right: 10px;
+}
+
+/* Services section styling */
+#services {
+    padding: 60px 20px;
+    background-color: #fff;
+    text-align: center;
+}
+
+#services h2 {
+    font-size: 2.5rem;
+    margin-bottom: 40px;
+    color: #4caf50;
+}
+
+#services ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+}
+
+#services ul li {
+    width: 100%;
+    max-width: 300px;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    text-align: left;
+}
+
+#services ul li:hover {
+    transform: translateY(-5px);
+}
+
+#services h3 {
+    font-size: 1.5rem;
+    color: #4caf50;
+    margin-bottom: 15px;
+}
+
+#services p {
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.5;
+}
+
+.service-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+
+
+
+/* Form styling */
+#service-availability {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+#service-availability h2 {
+    font-size: 1.8em;
+    color: #003f5c;
+    margin-bottom: 10px;
+}
+
+#availability-form {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+#availability-form label {
+    display: block;
+    font-size: 1em;
+    color: #003f5c;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#availability-form select,
+#availability-form input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+#availability-form button {
+    width: 100%;
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#availability-form button:hover {
+    background-color: #218838;
+}
+
+/* Result message styling */
+#availability-result {
+    font-size: 1.2em;
+    margin-top: 15px;
+}
+
+#availability-result.green {
+    color: #28a745;
+}
+
+#availability-result.red {
+    color: #dc3545;
+}
+
+footer p{
+    background-color: #333;
+    color: #fff !important;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: 20px;
+}
+
+
+
+
+#logo-video {
+    width: 100px; /* Adjust the width as needed */
+    height: auto; /* Keeps the aspect ratio */
+    border-radius: 40%; /* Optional: makes the video appear circular */
+    overflow: hidden; /* Hides any overflow */
+}
+
+header .logo {
+    display: flex;
+    align-items: center;
+}
+
+
+
+/* Service Availability Section Styles */
+#service-availability {
+    background-color: #f8f9fa;
+    padding: 50px 30px;
+    margin: 30px 0;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    
+}
+
+#service-availability h2 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#service-availability p {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* Styling the Form */
+#availability-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#availability-form label {
+    font-size: 1.1rem;
+    color: #333;
+}
+
+#city, #area {
+    padding: 12px;
+    font-size: 1rem;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
+}
+
+/* Button Styles */
+#availability-form button {
+    padding: 15px 20px;
+    background-color: #28a745;
+    color: white;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#availability-form button:hover {
+    background-color: #218838;
+}
+
+#availability-form button:active {
+    background-color: #1e7e34;
+}
+
+/* Result message */
+#availability-result {
+    margin-top: 25px;
+    font-size: 1.2rem;
+}
+
+/* Styles for mobile responsiveness */
+@media (max-width: 768px) {
+    #service-availability {
+        padding: 30px 20px;
+    }
+
+    #service-availability h2 {
+        font-size: 1.8rem;
+    }
+
+    #availability-form {
+        gap: 10px;
+    }
+
+    #availability-form button {
+        font-size: 1rem;
+    }
+}

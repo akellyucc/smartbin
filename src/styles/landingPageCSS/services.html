@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Management Services</title>
+    <link rel="stylesheet" href="services.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <video autoplay muted loop id="logo-video">
+                    <source src="W5.mp4" type="video/mp4">
+                    
+                </video>
+                <h1>Waste Management Servies</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#wastemanagement.html">Home</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li><a href="login.html">Login</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+</section>
+
+
+
+</body>
+</html>
+
+    <section id="services">
+        <h2>Our Services</h2>
+        <ul>
+            <li>
+                <h3>Residential Waste Collection</h3>
+                <p>We offer reliable and timely waste collection services for households. Our smart bins notify you when they are full, and we schedule collections accordingly, ensuring a clean and healthy living environment for you and your family.</p>
+                <img src="residential-area.jpg" alt="Residential Area" class="service-img">
+                
+            </li>
+            <li>
+                <h3>Commercial Waste Management</h3>
+                <p>Our commercial waste management service is tailored for businesses of all sizes. We provide smart bins and dumpsters that track waste levels, allowing us to offer flexible and efficient collection services. Focus on your business while we take care of the waste.</p>
+                <img src="commercial.jpg" alt="Commercial Area" class="service-img">
+            </li>
+            <li>
+                <h3>Recycling Services</h3>
+                <p>Our recycling services make it easy for you to contribute to a sustainable future. We collect and sort recyclable materials such as paper, plastics, metals, and glass, ensuring that they are properly processed and kept out of landfills.</p>
+                <img src="recycle.jpg" alt="Recycle Area" class="service-img">
+            </li>
+            <li>
+                <h3>Hazardous Waste Disposal</h3>
+                <p>Handling hazardous waste requires special care. We provide safe and compliant disposal services for hazardous materials such as chemicals, batteries, and electronic waste, ensuring they are processed responsibly to protect the environment and your community.</p>
+                <img src="Hazardous.png" alt="Recycle Area" class="service-img">
+            </li>
+        </ul>
+
+        <section id="service-availability">
+            <h2>Check Service Availability in Your Area</h2>
+            <p>Select your parish and city to check if our waste collection services are available:</p>
+        
+            <form id="availability-form">
+                <label for="parish">Parish:</label>
+                <select id="parish" name="parish" onchange="populateCities()">
+                    <option value="">Select Parish</option>
+                    <option value="Kingston and St. Andrew">Kingston and St. Andrew</option>
+                    <option value="St. Catherine">St. Catherine</option>
+                    <option value="St. James">St. James</option>
+                    <option value="Manchester">Manchester</option>
+                    <option value="St. Thomas">St. Thomas</option>
+                    <option value="St. Mary">St. Mary</option>
+                    <option value="St. Ann">St. Ann</option>
+                    <option value="Clarendon">Clarendon</option>
+                    <option value="Hanover">Hanover</option>
+                    <option value="Westmoreland">Westmoreland</option>
+                    <option value="Trelawny">Trelawny</option>
+                    <option value="Portland">Portland</option>
+                    <option value="St. Elizabeth">St. Elizabeth</option>
+                    <option value="St. Thomas">St. Thomas</option>
+                </select>
+        
+                <label for="city">City:</label>
+                <select id="city" name="city">
+                    <option value="">Select City</option>
+                </select>
+        
+                <button type="button" onclick="checkAvailability()">Check Availability</button>
+            </form>
+        
+            <p id="availability-result"></p>
+        </section>
+        
+        <script>
+            const availableLocations = {
+                'Kingston and St. Andrew': ['New Kingston', 'Half Way Tree', 'Cross Roads', 'Port Royal', 'Constant Spring'],
+                'St. Catherine': ['Spanish Town', 'Portmore', 'Old Harbour', 'Linstead', 'Ewarton'],
+                'St. James': ['Montego Bay', 'Rose Hall', 'Ironshore', 'Fairview', 'Springmount'],
+                'Manchester': ['Mandeville', 'Hatfield', 'Belmont', 'New Green', 'Christiana'],
+                'St. Thomas': ['Morant Bay', 'Yallahs', 'Port Morant', 'Seaforth', 'Golden Grove'],
+                'St. Mary': ['Port Maria', 'Annotto Bay', 'Highgate', 'Richmond', 'Oracabessa'],
+                'St. Ann': ['Ocho Rios', 'St. Ann’s Bay', 'Brown’s Town', 'Discovery Bay', 'Runaway Bay'],
+                'Clarendon': ['May Pen', 'Lionel Town', 'Hayes', 'Chapelton', 'Palmers Cross'],
+                'Hanover': ['Lucea', 'Hopewell', 'Green Island', 'Sandy Bay'],
+                'Westmoreland': ['Savanna-la-Mar', 'Negril', 'Grange Hill', 'Little London'],
+                'Trelawny': ['Falmouth', 'Duncans', 'Rio Bueno', 'Clark’s Town'],
+                'Portland': ['Port Antonio', 'Buff Bay', 'Manchioneal', 'Hope Bay', 'Orange Bay'],
+                'St. Elizabeth': ['Black River', 'Santa Cruz', 'Junction', 'Malvern', 'Southfield'],
+                'St. Thomas': ['Morant Bay', 'Yallahs', 'Bath', 'Seaforth']
+            };
+        
+            function populateCities() {
+                const parish = document.getElementById('parish').value;
+                const cityDropdown = document.getElementById('city');
+                
+                // Clear the city dropdown
+                cityDropdown.innerHTML = '<option value="">Select City</option>';
+        
+                // Populate cities based on selected parish
+                if (availableLocations[parish]) {
+                    availableLocations[parish].forEach(city => {
+                        const option = document.createElement('option');
+                        option.value = city;
+                        option.textContent = city;
+                        cityDropdown.appendChild(option);
+                    });
+                }
+            }
+        
+            function checkAvailability() {
+                const parish = document.getElementById('parish').value;
+                const city = document.getElementById('city').value;
+                const resultElement = document.getElementById('availability-result');
+        
+                if (!parish) {
+                    resultElement.textContent = "Please select a parish.";
+                    resultElement.style.color = "red";
+                } else if (!city) {
+                    resultElement.textContent = "Please select a city.";
+                    resultElement.style.color = "red";
+                } else {
+                    resultElement.textContent = `Our waste collection services are ${
+                        availableLocations[parish].includes(city) ? "available" : "not available"
+                    } in ${city}, ${parish}.`;
+                    resultElement.style.color = availableLocations[parish].includes(city) ? "green" : "red";
+                }
+            }
+        </script>
+        
+<br>
+
+        <footer>
+            <p>&copy; 2024 Waste Management. All rights reserved.</p>
+        </footer>
+
+        

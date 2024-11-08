@@ -1,87 +1,155 @@
 import React, { useState } from 'react';
-import '../styles/Header.css';
 import { Link } from 'react-router-dom';
+import '../styles/Header.css'; // Import your custom CSS
+import { ROLES, PERMISSIONS, ROLE_PERMISSIONS } from '../constants/roles'; // Import roles and permissions
 
-const Header = ({ onParishChange }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isSubmenuOpen, setIsSubmenuOpen] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState('');
+const Header = ({ onParishChange, onLogout, user }) => {
+  const [isLocationDropdownOpen, setIsLocationDropdownOpen] = useState(false);
+  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedParish, setSelectedParish] = useState(null);
 
   const countries = [
-    { name: 'Jamaica', parishes: ['Portmore', 'Kingston', 'St. Andrew', 'St. Catherine', 'Clarendon', 'Manchester', 'St. Elizabeth', 'Westmoreland', 'Hanover', 'St. James', 'Trelawny', 'St. Ann', 'St. Mary'] },
+    {
+      name: 'Jamaica',
+      parishes: [
+        'Portmore', 'Kingston', 'St. Andrew', 'St. Catherine', 'Clarendon',
+        'Manchester', 'St. Elizabeth', 'Westmoreland', 'Hanover', 'St. James',
+        'Trelawny', 'St. Ann', 'St. Mary'
+      ]
+    },
     { name: 'USA', parishes: [] }
   ];
 
   const handleCountryChange = (country) => {
     setSelectedCountry(country);
-    setIsDropdownOpen(false); // Close dropdown
+    setSelectedParish(null);  // Reset parish when changing country
+    setIsLocationDropdownOpen(false); // Close the country dropdown
+    console.log("Selected Country:", country);
   };
-  console.log(selectedCountry);
+
   const handleParishChange = (parish) => {
-    console.log('Selected Parish in Header:', parish); // Debugging
-    onParishChange(parish); // Update the selected parish in the parent component
-    setIsDropdownOpen(false); // Close dropdown
-    setIsSubmenuOpen(false); // Close submenu
+    setSelectedParish(parish);
+    onParishChange(parish); // Pass parish back to parent component
+    setIsLocationDropdownOpen(false); // Close the dropdowns after selecting a parish
+    console.log("Selected Parish:", parish);
+  };
+
+  const handleLogout = () => {
+    onLogout();
+    setIsLocationDropdownOpen(false); // Close location dropdown on logout
+  };
+
+  // Check if the user has a specific permission
+  const hasPermission = (permission) => {
+    return user && ROLE_PERMISSIONS[user.role]?.includes(permission);
   };
 
   return (
     <header className="header">
       <div className="branding">Smart Bin Management and Disposal System</div>
-      <nav>
-        <ul className="nav-list">
-          <li className="nav-item">
-            <Link class="home_link"to="/">Home</Link> {/* Link to home page */}
-          </li>
-          <li className="nav-item">Bin Status</li>
-          <li
-            className="nav-item dropdown"
-            onMouseEnter={() => setIsDropdownOpen(true)}
-            onMouseLeave={() => setIsDropdownOpen(false)}
-          >
-            <div className="dropdown-toggle">Location</div>
-            {isDropdownOpen && (
-              <div className="dropdown-menu">
-                {countries.map((country) => (
-                  <div
-                    key={country.name}
-                    className="dropdown-item"
-                    onMouseEnter={() => {
-                      if (country.name === 'Jamaica') {
-                        setIsSubmenuOpen(true);
-                      }
-                    }}
-                    onMouseLeave={() => {
-                      if (country.name === 'Jamaica') {
-                        setIsSubmenuOpen(false);
-                      }
-                    }}
-                    onClick={() => handleCountryChange(country.name)}
-                  >
-                    {country.name}
-                    {country.name === 'Jamaica' && isSubmenuOpen && (
-                      <div className="submenu">
-                        {country.parishes.map((parish, index) => (
-                          <div
-                            key={index}
-                            className="submenu-item"
-                            onClick={() => handleParishChange(parish)}
-                          >
-                            {parish}
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+
+      <div className="nav-container">
+        <nav>
+          <ul className="nav">
+            {/* Home Link - Visible to Managers, Admins, and Users with View Dashboard permission */}
+            {(hasPermission(PERMISSIONS.VIEW_REPORTS) || hasPermission(PERMISSIONS.MANAGE_BINS) || hasPermission(PERMISSIONS.VIEW_DASHBOARD)) && (
+              <li className="nav-item">
+                <Link to="/" className="nav-link">Home</Link>
+              </li>
             )}
-          </li>
-          <li className="nav-item">Route Management</li>
-          <li className="nav-item">Reports</li>
-          <li className="nav-item">Settings</li>
-        </ul>
-      </nav>
-      <div className="user-profile">Profile</div>
+
+            {/* Location Dropdown */}
+            <li className="nav-item dropdown">
+              <button
+                className="nav-link"
+                onClick={() => setIsLocationDropdownOpen(!isLocationDropdownOpen)} // Toggle dropdown visibility
+              >
+                Location
+              </button>
+              {isLocationDropdownOpen && (
+                <div className="dropdown-menu">
+                  {countries.map((country) => (
+                    <div key={country.name}>
+                      <button
+                        className="dropdown-item"
+                        onClick={() => handleCountryChange(country.name)}
+                      >
+                        {country.name}
+                      </button>
+                      {/* Show parishes dropdown if a country is selected */}
+                      {country.name === selectedCountry && country.parishes.length > 0 && (
+                        <div className="parish-menu">
+                          {country.parishes.map((parish, index) => (
+                            <button
+                              key={index}
+                              className="dropdown-item parish-item"
+                              onClick={() => handleParishChange(parish)}
+                            >
+                              {parish}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </li>
+
+            {/* Role-specific Links */}
+            {user?.role === ROLES.ADMIN && (
+              <li className="nav-item">
+                <Link to="/admin-dashboard" className="nav-link">Administrator</Link>
+              </li>
+            )}
+
+            {user?.role === ROLES.MANAGER && (
+              <li className="nav-item">
+                <Link to="/manager-dashboard" className="nav-link">Manager Dashboard</Link>
+              </li>
+            )}
+
+            {user?.role === ROLES.DRIVER && (
+              <li className="nav-item">
+                <Link to="/driver-dashboard" className="nav-link">Driver Dashboard</Link>
+              </li>
+            )}
+
+            {/* Dashboard Link - Only if user has View Dashboard permission */}
+            {hasPermission(PERMISSIONS.VIEW_DASHBOARD) && (
+              <li className="nav-item">
+                <Link to="/dashboard" className="nav-link">Dashboard</Link>
+              </li>
+            )}
+
+            {/* Reports Link - Visible to Users with View Reports permission */}
+            {hasPermission(PERMISSIONS.VIEW_REPORTS) && (
+              <li className="nav-item">
+                <Link to="/reports" className="nav-link">Reports</Link>
+              </li>
+            )}
+
+            {/* Manage Bins Link - Visible to users with Manage Bins permission */}
+            {hasPermission(PERMISSIONS.MANAGE_BINS) && (
+              <li className="nav-item">
+                <Link to="/manage-bins" className="nav-link">Manage Bins</Link>
+              </li>
+            )}
+
+            {/* Manage Users Link - Visible only to Admin */}
+            {user?.role === ROLES.ADMIN && hasPermission(PERMISSIONS.MANAGE_USERS) && (
+              <li className="nav-item">
+                <Link to="/manage-users" className="nav-link">Manage Users</Link>
+              </li>
+            )}
+          </ul>
+        </nav>
+      </div>
+
+      {/* Profile Section on the Right */}
+      <div className="profile-section">
+        <button className="nav-link" onClick={handleLogout}>Logout</button>
+      </div>
     </header>
   );
 };

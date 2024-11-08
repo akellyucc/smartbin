@@ -1,0 +1,159 @@
+.manage-bins {
+  margin: 100px auto;
+  max-width: 900px;
+  padding: 20px;
+  background-color: #f4f4f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.page-title {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.users-table {
+
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bins-table th  {
+  padding: 10px;
+  text-align: center;
+  border: 1px solid #ddd;
+    background-color: green;
+
+
+}
+
+
+
+.empty-message {
+  font-size: 1.2em;
+  color: #999;
+  text-align: center;
+}
+
+button {
+  padding: 8px 16px;
+  font-size: 1em;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.approve-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+}
+
+.reject-btn {
+  background-color: #F44336;
+  color: white;
+  border: none;
+}
+
+.activate-btn {
+  background-color: #2196F3;
+  color: white;
+  border: none;
+}
+
+.deactivate-btn {
+  background-color: #FFC107;
+  color: white;
+  border: none;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure modal is above other content */
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  max-width: 500px; /* Set a max width for the modal */
+  width: 100%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Modal Header */
+.modal-content h2 {
+  margin-bottom: 10px;
+  font-size: 1.5em;
+  text-align: center;
+}
+
+/* Form Fields */
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.modal-content label {
+  font-weight: bold;
+}
+
+.modal-content input {
+  padding: 8px;
+  font-size: 1em;
+  width: 100%;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box; /* To include padding in width calculation */
+}
+
+.modal-content input[type="number"] {
+  -moz-appearance: textfield; /* Remove spinner in number input (optional) */
+}
+
+/* Buttons */
+.add-button, .close-modal-button {
+  padding: 10px 20px;
+  font-size: 1em;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%; /* Full width for buttons */
+  margin-top: 10px;
+}
+
+.add-button {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.close-modal-button {
+  background-color: #F44336;
+  color: white;
+  margin-top: 15px;
+}
+
+/* Responsive Behavior (Optional) */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 90%; /* Full width on smaller screens */
+  }
+}

@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Use Routes instead of Switch
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import Map from './components/Map';
@@ -7,30 +8,190 @@ import Notifications from './components/Notifications';
 import ActionButtons from './components/ActionButtons';
 import ReportPage from './components/ReportPage';
 import SchedulePickup from './components/SchedulePickup';
+import Login from './components/login';
+import LandingPage from './components/LandingPage';
+import AdminDashboard from './components/AdminDashboard';
+import ManageUsers from './components/ManageUsers';
+import ManageWasteCollection from './components/ManageWasteCollection';
+import ManageBins from './components/ManageBins';
+import ManageSettings from './components/ManageSettings';
+import ManageWasteCollectionReports from './components/ManageWasteCollectionReports';
+import WasteCollectionReports from './components/WasteCollectionReports';
+import { ROLES, PERMISSIONS } from './constants/roles';
+
 import './App.css';
+import 'react-toastify/dist/ReactToastify.css'; // Make sure to import the Toastify CSS
+
 function App() {
   const [selectedParish, setSelectedParish] = useState('');
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+  };
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  const hasPermission = (permission) => {
+    return user && user.permissions && user.permissions.includes(permission);
+  };
 
   return (
     <Router>
       <div className="App">
-        <Header onParishChange={setSelectedParish} />
+        {/* Conditionally render the Header only if user is logged in */}
+        {user && (
+          <Header onParishChange={setSelectedParish} onLogout={handleLogout} user={user} />
+        )}
         <main>
           <Routes>
-            {/* Define routes */}
-            <Route path="/reports" element={<ReportPage selectedParish={selectedParish}/>} />
-            <Route path="/schedule-pickup" element={<SchedulePickup />} />
-            <Route path="/" element={
-              <>
-                <Dashboard />
-                <div className="content">
-                  <Map selectedParish={selectedParish} />
-                  <Notifications />
-                </div>
-                <ActionButtons />
-              </>
-            } />
+            <Route path="/" element={user ? <Navigate to="/dashboard" /> : <LandingPage />} />
+            <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />} />
+
+            {/* Protected Routes */}
+            <Route
+              path="/dashboard"
+              element={
+                user && hasPermission(PERMISSIONS.VIEW_DASHBOARD) ? (
+                  <>
+                    <Dashboard />
+                    <div className="content">
+                      <Map selectedParish={selectedParish} />
+                      <Notifications />
+                    </div>
+                    <ActionButtons />
+                  </>
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            {/* Admin Dashboard */}
+            <Route
+              path="/admin-dashboard"
+              element={
+                user && user.role === ROLES.ADMIN && hasPermission(PERMISSIONS.MANAGE_USERS) ? (
+                  <AdminDashboard />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            {/* Role-based routes */}
+            <Route
+              path="/manage-users"
+              element={
+                user && user.role === ROLES.ADMIN && hasPermission(PERMISSIONS.MANAGE_USERS) ? (
+                  <ManageUsers />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            <Route
+              path="/manage-bins"
+              element={
+                user && (user.role === ROLES.DRIVER || user.role === ROLES.ADMIN) && hasPermission(PERMISSIONS.MANAGE_BINS) ? (
+                  <ManageBins />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            <Route
+              path="/settings"
+              element={
+                user && user.role === ROLES.ADMIN && hasPermission(PERMISSIONS.MANAGE_SETTINGS) ? (
+                  <ManageSettings />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            <Route
+              path="/reports"
+              element={
+                user && hasPermission(PERMISSIONS.VIEW_REPORTS) ? (
+                  <ReportPage />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+
+            <Route
+              path="/manage-waste-collection-reports"
+              element={
+                user && user.role === ROLES.ADMIN ? (
+                  <ManageWasteCollectionReports />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/waste-collection-reports"
+              element={
+                user && user.role === ROLES.ADMIN ? (
+                  <WasteCollectionReports />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/manage-waste-collection"
+              element={
+                user && user.role === ROLES.ADMIN ? (
+                  <ManageWasteCollection />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
+            <Route
+              path="/schedule-pickup"
+              element={
+                user && hasPermission(PERMISSIONS.REQUEST_PICKUP) ? (
+                  <SchedulePickup />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
           </Routes>
+
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
         </main>
       </div>
     </Router>

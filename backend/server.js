@@ -4,6 +4,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const http = require('http');
 const { initSocket, emitBinStatusUpdate } = require('../src/components/SocketService'); // Adjust path as needed
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 dotenv.config(); // Load environment variables
 
@@ -46,9 +48,103 @@ const queryDB = (query, values) => {
     });
 };
 
-
+///////////////////////
+/////////LOGIN AND REG SECTION////
 ////////////////////////
+// Simple API to register a new user (No password hashing for simplicity)
 
+// Inside the register route:
+app.post('/api/register', async (req, res) => {
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+        return res.status(400).json({ message: 'Username and password are required' });
+    }
+
+    try {
+        // Check if username already exists
+        const userCheckQuery = 'SELECT * FROM users WHERE username = ?';
+        const existingUser = await queryDB(userCheckQuery, [username]);
+
+        if (existingUser.length > 0) {
+            return res.status(400).json({ message: 'Username already taken' });
+        }
+
+        // Hash the password before saving
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Save the new user with hashed password in the DB
+        const insertUserQuery = 'INSERT INTO users (username, password) VALUES (?, ?)';
+        await queryDB(insertUserQuery, [username, hashedPassword]);
+        console.log(hashedPassword);
+
+        res.status(201).json({ message: 'User registered successfully' });
+    } catch (error) {
+        console.error('Error during registration:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
+// Simple API to login (no token authentication for simplicity)
+app.post('/api/login', (req, res) => {
+    const { email, password } = req.body;
+
+    const query = `
+        SELECT
+            users.id,
+            users.email,
+            users.password,
+            roles.name AS role,
+            roles.id AS role_id,
+            GROUP_CONCAT(permissions.name) AS permissions
+        FROM users
+        JOIN roles ON users.role_id = roles.id
+        LEFT JOIN role_permissions ON roles.id = role_permissions.role_id
+        LEFT JOIN permissions ON role_permissions.permission_id = permissions.id
+        WHERE users.email = ?
+        GROUP BY users.id, roles.id;
+    `;
+
+    pool.query(query, [email], async (err, results) => {  // Use pool.query here
+        if (err) {
+            console.error('Error querying the database:', err);
+            return res.status(500).json({ message: 'Server error' });
+        }
+
+        if (results.length === 0) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        const user = results[0];  // Assuming only one user is found
+
+        // Check if password matches
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { userId: user.id, role: user.role, permissions: user.permissions.split(',') }, // Permissions are a comma-separated string
+            'password1',  // Replace with a secure secret key
+            { expiresIn: '1h' }  // Token expiration time
+        );
+
+        // Respond with user data and token
+        res.json({
+            message: 'Login successful',
+            user: {
+                email: user.email,
+                role: user.role,
+                permissions: user.permissions.split(','), // Split comma-separated permissions into an array
+            },
+            token,
+        });
+    });
+});
+
+
+//////////////////////
 // Fetch Report Data Endpoint
 app.get('/api/report/:parishName', async (req, res) => {
     const parishName = req.params.parishName;
