@@ -77,7 +77,7 @@ const WasteManagementReport = ({ reportData, selectedParish }) => {
     <div className="report-page">
       <header className="report-header">
         <h1>Waste Management and Disposal Report</h1>
-        <p>Selected Parish: <strong>{selectedParish || 'None'}</strong></p>
+        <h2>Selected Parish: <strong>{selectedParish || 'None'}</strong></h2>
         <p className="report-date">{new Date().toLocaleDateString()}</p>
       </header>
 

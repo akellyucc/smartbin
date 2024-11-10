@@ -46,7 +46,7 @@ const Header = ({ onParishChange, onLogout, user }) => {
 
   return (
     <header className="header">
-      <div className="branding">Smart Bin Management and Disposal System</div>
+      <div className="branding"><metric-card>Smart Bin Management and Disposal System</metric-card></div>
 
       <div className="nav-container">
         <nav>
@@ -54,18 +54,18 @@ const Header = ({ onParishChange, onLogout, user }) => {
             {/* Home Link - Visible to Managers, Admins, and Users with View Dashboard permission */}
             {(hasPermission(PERMISSIONS.VIEW_REPORTS) || hasPermission(PERMISSIONS.MANAGE_BINS) || hasPermission(PERMISSIONS.VIEW_DASHBOARD)) && (
               <li className="nav-item">
-                <Link to="/" className="nav-link">Home</Link>
+                <Link to="/" className="nav-links">Home</Link>
               </li>
             )}
 
             {/* Location Dropdown */}
             <li className="nav-item dropdown">
-              <button
-                className="nav-link"
+              <li
+                className="nav-links"
                 onClick={() => setIsLocationDropdownOpen(!isLocationDropdownOpen)} // Toggle dropdown visibility
               >
                 Location
-              </button>
+              </li>
               {isLocationDropdownOpen && (
                 <div className="dropdown-menu">
                   {countries.map((country) => (
@@ -99,47 +99,53 @@ const Header = ({ onParishChange, onLogout, user }) => {
             {/* Role-specific Links */}
             {user?.role === ROLES.ADMIN && (
               <li className="nav-item">
-                <Link to="/admin-dashboard" className="nav-link">Administrator</Link>
+                <Link to="/admin-dashboard" className="nav-links">Admin Report</Link>
+              </li>
+            )}
+
+            {user?.role === ROLES.ADMIN && (
+              <li className="nav-item">
+                <Link to="/manage-waste-collection-reports" className="nav-links">Manage Collection Reports</Link>
               </li>
             )}
 
             {user?.role === ROLES.MANAGER && (
               <li className="nav-item">
-                <Link to="/manager-dashboard" className="nav-link">Manager Dashboard</Link>
+                <Link to="/manager-dashboard" className="nav-links">Manager Dashboard</Link>
+              </li>
+            )}
+            {(user?.role === ROLES.MANAGER || user?.role === ROLES.ADMIN) && (
+              <li className="nav-item">
+                <Link to="/waste-collection-reports" className="nav-links">Waste Collection Report</Link>
               </li>
             )}
 
             {user?.role === ROLES.DRIVER && (
               <li className="nav-item">
-                <Link to="/driver-dashboard" className="nav-link">Driver Dashboard</Link>
+                <Link to="/driver-dashboard" className="nav-links">Driver Dashboard</Link>
               </li>
             )}
 
-            {/* Dashboard Link - Only if user has View Dashboard permission */}
-            {hasPermission(PERMISSIONS.VIEW_DASHBOARD) && (
-              <li className="nav-item">
-                <Link to="/dashboard" className="nav-link">Dashboard</Link>
-              </li>
-            )}
+
 
             {/* Reports Link - Visible to Users with View Reports permission */}
             {hasPermission(PERMISSIONS.VIEW_REPORTS) && (
               <li className="nav-item">
-                <Link to="/reports" className="nav-link">Reports</Link>
+                <Link to="/reports" className="nav-links">Reports</Link>
               </li>
             )}
 
             {/* Manage Bins Link - Visible to users with Manage Bins permission */}
             {hasPermission(PERMISSIONS.MANAGE_BINS) && (
               <li className="nav-item">
-                <Link to="/manage-bins" className="nav-link">Manage Bins</Link>
+                <Link to="/manage-bins" className="nav-links">Manage Bins</Link>
               </li>
             )}
 
             {/* Manage Users Link - Visible only to Admin */}
             {user?.role === ROLES.ADMIN && hasPermission(PERMISSIONS.MANAGE_USERS) && (
               <li className="nav-item">
-                <Link to="/manage-users" className="nav-link">Manage Users</Link>
+                <Link to="/manage-users" className="nav-links">Manage Users</Link>
               </li>
             )}
           </ul>

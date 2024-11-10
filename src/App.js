@@ -17,6 +17,9 @@ import ManageBins from './components/ManageBins';
 import ManageSettings from './components/ManageSettings';
 import ManageWasteCollectionReports from './components/ManageWasteCollectionReports';
 import WasteCollectionReports from './components/WasteCollectionReports';
+import Services from './components/ApplyForService';
+import Signup from './components/Signup'; // Adjust path as needed
+
 import { ROLES, PERMISSIONS } from './constants/roles';
 
 import './App.css';
@@ -61,7 +64,19 @@ function App() {
         <main>
           <Routes>
             <Route path="/" element={user ? <Navigate to="/dashboard" /> : <LandingPage />} />
-            <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login onLogin={handleLogin} />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+
+            {/*services */}
+            <Route
+              path="/Services"
+              element={
+                user && user.role === ROLES.GUEST && hasPermission(PERMISSIONS.VIEW_SERVICES) ? (
+                    <Services />
+                ) : (
+                  <Navigate to="/login" />
+                )
+              }
+            />
 
             {/* Protected Routes */}
             <Route
@@ -81,6 +96,15 @@ function App() {
                 )
               }
             />
+
+
+
+
+      <Route>
+        <Route path="/signup" element={<Signup />} />
+        {/* Add more routes here */}
+      </Route>
+
 
             {/* Admin Dashboard */}
             <Route
@@ -105,6 +129,19 @@ function App() {
                 )
               }
             />
+           {/* Role-based routes */}
+          <Route
+            path="/services"
+            element={
+              // Check if user exists and if they have the required permission
+              user  ? (
+                <Services />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+
 
             <Route
               path="/manage-bins"
@@ -132,7 +169,8 @@ function App() {
               path="/reports"
               element={
                 user && hasPermission(PERMISSIONS.VIEW_REPORTS) ? (
-                  <ReportPage />
+                  <ReportPage  selectedParish={selectedParish}/>
+
                 ) : (
                   <Navigate to="/login" />
                 )

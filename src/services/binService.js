@@ -32,6 +32,8 @@ const fetchFullBinsDetails  = () =>
 const fetchTotalBinsMonitored = () =>
   fetchData('/api/bins/totalBinsMonitored').then(data => data.total);
 
+const fetchCollectionHistoryDetails = () =>
+  fetchData('/api/collection-history').then(data => data);
 
 const fetchBinDetails = () => fetchData('/api/bin-details');
 
@@ -90,6 +92,7 @@ const fetchAllBins = async () => {
     return [];
   }
 };
+
 
 
 //fetch report by parish
@@ -169,6 +172,7 @@ const binService = {
   fetchReportByParish,
   fetchReportDetails,
   fetchAllBins,
+  fetchCollectionHistoryDetails,
 };
 
 // Export the object

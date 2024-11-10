@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify'; // For notifications
 import Modal from './Modal'; // Import the Modal component
 import '../styles/WasteCollectionReport.css';
 
@@ -37,7 +36,6 @@ const initialReports = [
 ];
 
 const WasteCollectionReport = () => {
-  const [reports, setReports] = useState(initialReports);
   const [filteredReports, setFilteredReports] = useState(initialReports);
   const [selectedReport, setSelectedReport] = useState(null); // For the selected report to view
   const [isModalOpen, setIsModalOpen] = useState(false); // Modal open/close state
@@ -62,7 +60,7 @@ const WasteCollectionReport = () => {
   };
 
   const applyFilters = () => {
-    let filtered = reports;
+    let filtered = initialReports; // Use initialReports since setReports is not needed
 
     if (filter.startDate) {
       filtered = filtered.filter((report) => new Date(report.collectionDate) >= new Date(filter.startDate));

@@ -258,7 +258,7 @@ app.get('/api/report/report-details', async (req, res) => {
             JOIN bins b ON c.community_id = b.community_id
             WHERE b.status = 'full';
         `;
-        const historicalDataQuery = 'SELECT date,status, bin_id, COUNT(*) AS count_per_day FROM historical_data GROUP BY date';
+        //const historicalDataQuery = 'SELECT date,status, bin_id, COUNT(*) AS count_per_day FROM historical_data GROUP BY date';
         const locationBreakdownQuery = `
             SELECT c.community_name, COUNT(b.bin_id) AS bin_count_per_community
             FROM community c
@@ -272,7 +272,7 @@ app.get('/api/report/report-details', async (req, res) => {
             queryDB(binDetailsQuery),
             queryDB(healthBreakdownQuery),
             queryDB(fullBinsQuery),
-            queryDB(historicalDataQuery),
+            //queryDB(historicalDataQuery),
             queryDB(locationBreakdownQuery),
             queryDB(activeRoutesQuery)
         ]);
@@ -282,7 +282,7 @@ app.get('/api/report/report-details', async (req, res) => {
             binDetails,
             healthBreakdown,
             fullBins,
-            historicalData,
+            //historicalData,
             locationBreakdown,
             activeRoutes
         });
@@ -310,7 +310,7 @@ app.get('/api/bin-details', async (req, res) => {
             JOIN bins b ON c.community_id = b.community_id
             WHERE b.status = 'full';
         `;
-        const historicalDataQuery = 'SELECT date,status, bin_id, COUNT(*) AS count_per_day FROM historical_data GROUP BY date';
+        //const historicalDataQuery = 'SELECT date,status, bin_id, COUNT(*) AS count_per_day FROM historical_data GROUP BY date';
         const locationBreakdownQuery = `
             SELECT c.community_name, COUNT(b.bin_id) AS bin_count_per_community
             FROM community c
@@ -324,7 +324,7 @@ app.get('/api/bin-details', async (req, res) => {
             queryDB(binDetailsQuery),
             queryDB(healthBreakdownQuery),
             queryDB(fullBinsQuery),
-            queryDB(historicalDataQuery),
+            //queryDB(historicalDataQuery),
             queryDB(locationBreakdownQuery),
             queryDB(activeRoutesQuery)
         ]);
@@ -334,7 +334,7 @@ app.get('/api/bin-details', async (req, res) => {
             binDetails,
             healthBreakdown,
             fullBins,
-            historicalData,
+            //historicalData,
             locationBreakdown,
             activeRoutes
         });
@@ -529,26 +529,63 @@ app.get('/api/routes', async (req, res) => {
     }
 });
 
+// Collection history API
+app.get('/api/collection-history', async (req, res) => {
+    try {
+        // SQL queries
+        const collectionHistorySQL = 'SELECT * FROM collection_historical_data'; // Get all collection history records
+        //const totalSQL = 'SELECT COUNT(*) AS total FROM collection_historical_data'; // Get total count of records
+        const totalSQL = 'SELECT SUM(collected_waste_volume) AS total_collected_waste FROM collection_historical_data';
+        // Fetch data concurrently using Promise.all
+        const [collectionHistoryData, totalData] = await Promise.all([
+            queryDB(collectionHistorySQL),  // Results of collection history query
+            queryDB(totalSQL),               // Results of total records query
+        ]);
 
+        // Get the total value from the query result (default to 0 if no result is found)
+        const total = totalData[0]?.total_collected_waste || 0;
 
+        // Send the response with the collection history and the total number of records
+        res.json({
+            collectionHistory: collectionHistoryData,  // The collection history records
+            total,  // The total number of records
+        });
+    } catch (error) {
+        console.error('Error fetching collection history details:', error);
+        res.status(500).json({ message: 'Could not fetch collection history details: ' + error.message });
+    }
+});
 
-// Route to fetch active route details
+// Route to fetch active route details and the total number of routes
 app.get('/api/activeRoutesDetails', async (req, res) => {
     try {
-       const activeRoutesDetailsQuery = 'SELECT * FROM active_routes';
-        // Fetch all data concurrently
-        const [activeRoutsDetails] = await Promise.all([
-              queryDB(activeRoutesDetailsQuery),
+        // SQL queries
+        const activeRoutesDetailsQuery = 'SELECT * FROM active_routes'; // Get all routes
+        const totalQuery = 'SELECT COUNT(*) AS total FROM active_routes'; // Get total count of routes
+
+        // Fetch data concurrently
+        const [activeRoutsDetails, totalQueryResult] = await Promise.all([
+            queryDB(activeRoutesDetailsQuery),
+            queryDB(totalQuery), // Query to calculate the total number of routes
         ]);
-        // Send the data back to the frontend
+
+        // Get the total value from the query result
+        const total = totalQueryResult[0]?.total || 0; // Default to 0 if there's no result
+
+        // Send the response with the active route details and the total
         res.json({
-           activeRoutsDetails,
+            activeRoutsDetails,
+            total, // Include the total number of routes in the response
         });
     } catch (error) {
         console.error('Error fetching active routes details:', error);
         res.status(500).json({ message: 'Could not fetch active routes details: ' + error.message });
     }
 });
+
+/////////////////////////////////////
+// Route to fetch active route details and the total number of routes
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {

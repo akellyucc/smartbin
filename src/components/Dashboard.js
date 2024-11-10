@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import binService from '../services/binService'; // Import the API functions
+import binService from '../services/binService';
 import '../styles/Dashboard.css';
 import BinDetails from './BinDetails';
 
@@ -12,71 +12,79 @@ const Dashboard = () => {
   const [binDetails, setBinDetails] = useState(null);
   const [selectedMetric, setSelectedMetric] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
-  //const [activeRoutes, setActiveRoutes] = useState(0);
-  const [activeRoutesDetails, setActiveRoutesDetails] = useState(0);
-  //const [totalWasteCollected, setTotalWasteCollected] = useState('1,200 kg'); // Change to dynamic if needed
+  const [activeRoutesDetails, setActiveRoutesDetails] = useState([]);
+  const [collectionHistoryDetails, setCollectionHistoryDetails] = useState([]);
+
+  // Fetch all data
+  const fetchData = async () => {
+    try {
+      const totalBins = await binService.fetchTotalBinsMonitored();
+      setTotalBins(totalBins);
+
+      const fullBins = await binService.fetchTotalFullBins();
+      setFullBins(fullBins);
+
+      const fullBinsDetails = await binService.fetchFullBinsDetails();
+      setFullBinsDetails(fullBinsDetails);
+
+      const nearFullBinsDetails = await binService.fetchNearFullBinsDetails();
+      setNearFullBinsDetails(nearFullBinsDetails);
+
+      const nearFullBins = await binService.fetchNearFullBins();
+      setNearFullBins(nearFullBins);
+
+      const fetchedBinDetails = await binService.fetchBinDetails();
+      setBinDetails(fetchedBinDetails);
+
+      const activeRoutesDetails = await binService.fetchActiveRoutesDetails();
+        setActiveRoutesDetails(activeRoutesDetails);
+
+      const collectionHistoryDetails = await binService.fetchCollectionHistoryDetails();
+        setCollectionHistoryDetails(collectionHistoryDetails);
+
+
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const totalBins = await binService.fetchTotalBinsMonitored();
-        setTotalBins(totalBins);
-
-        const fullBins = await binService.fetchTotalFullBins();
-        setFullBins(fullBins);
-
-        const fullBinsDetails = await binService.fetchFullBinsDetails();
-        setFullBinsDetails(fullBinsDetails);
-
-        const nearFullBinsDetails = await binService.fetchNearFullBinsDetails();
-        setNearFullBinsDetails(nearFullBinsDetails);
-
-        const nearFullBins = await binService.fetchNearFullBins();
-        setNearFullBins(nearFullBins);
-
-        const fetchedBinDetails = await binService.fetchBinDetails();
-        setBinDetails(fetchedBinDetails);
-
-
-        const activeRoutesDetails = await binService.fetchActiveRoutesDetails();
-        console.log('active routes detail from dash', activeRoutesDetails);
-        setActiveRoutesDetails(activeRoutesDetails); // Use fetched data here
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
+    // Fetch data initially and set up polling every 3 seconds
     fetchData();
+    const intervalId = setInterval(fetchData, 3000);
+
+    // Clear the interval when component unmounts
+    return () => clearInterval(intervalId);
   }, []);
 
   const metrics = [
     { title: 'Total Bins Monitored', value: totalBins, icon: '🗑️', details: 'totalBins' },
     { title: 'Full Bins Count', value: fullBins, icon: '❗', details: 'fullBinsDetails' },
     { title: 'Near Full Bins', value: nearFullBins, icon: '⚠️', details: 'nearFullBinsDetails' },
-    { title: 'Last Collection', value: 'Sep 14, 2024', icon: '📅' },
-     { title: 'Active Routes ', value: 5, icon: '🚚', details: 'activeRoutesDetails' },
-    { title: 'Total Waste Collected', value: 25, icon: '⚖️' },
-    //{ title: 'Total Waste Collected', value: totalWasteCollected, icon: '⚖️' },
+    { title: 'Collection History', value: 'Sep 14, 2024', icon: '📅' , details: 'collectionHistoryDetails'},
+    { title: 'Active Routes', value: activeRoutesDetails.total, icon: '🚚', details: 'activeRoutesDetails' },
+    { title: 'Total Waste Collected', value: `${collectionHistoryDetails.total} kg`, icon: '⚖️' },
   ];
 
   const handleMetricClick = (metric) => {
-    setSelectedMetric(metric.details);
-    setShowDetails(true);
+    if (metric.details) {
+      setSelectedMetric(metric.details);
+      setShowDetails(true);
+    }
   };
 
   const getSelectedData = () => {
-    if (!binDetails) return null;
-
     switch (selectedMetric) {
       case 'totalBins':
-        return binDetails; // Adjust as necessary if you have specific data for total bins
+        return binDetails;
       case 'fullBinsDetails':
         return fullBinsDetails;
       case 'nearFullBinsDetails':
         return nearFullBinsDetails;
       case 'activeRoutesDetails':
         return activeRoutesDetails;
-
+      case 'collectionHistoryDetails':
+        return collectionHistoryDetails;
       default:
         return null;
     }
@@ -103,8 +111,9 @@ const Dashboard = () => {
           <button
             className="close-button"
             onClick={() => setShowDetails(false)}
-            aria-label="Close details modal">
-            &times; {/* This will display a small "X" */}
+            aria-label="Close details modal"
+          >
+            &times;
           </button>
           <h2 id="modal-title">{metrics.find(m => m.details === selectedMetric)?.title} Details</h2>
           {getSelectedData() ? (
@@ -114,11 +123,11 @@ const Dashboard = () => {
           )}
           <button
             onClick={() => setShowDetails(false)}
-            aria-label="Close details modal">
+            aria-label="Close details modal"
+          >
             Close
           </button>
         </div>
-
       )}
     </div>
   );

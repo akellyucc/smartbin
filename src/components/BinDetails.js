@@ -1,8 +1,30 @@
 import React from 'react';
 import '../styles/BinsDetails.css';
 
+// Reusable Table Component
+const Table = ({ columns, data }) => (
+  <table>
+    <thead>
+      <tr>
+        {columns.map((col, idx) => (
+          <th key={idx}>{col}</th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {data.map((item, index) => (
+        <tr key={index}>
+          {Object.keys(item).map((key, idx) => (
+            <td key={idx}>{item[key] || 'N/A'}</td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
+
 const BinDetails = ({ data }) => {
-  console.log('test active data',data);
+  console.log('test active data', data);
   if (!data) {
     return <p>No data available.</p>;
   }
@@ -15,24 +37,14 @@ const BinDetails = ({ data }) => {
       {data.binDetails && data.binDetails.length > 0 && (
         <section>
           <h3>Bin Details</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Bin ID</th>
-                <th>Location</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.binDetails.map((bin, index) => (
-                <tr key={index}>
-                  <td>{bin.bin_id || 'N/A'}</td>
-                  <td>Latitude: {bin.latitude}, Longitude: {bin.longitude}</td>
-                  <td>{bin.status || 'N/A'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table
+            columns={['Bin ID', 'Location', 'Status']}
+            data={data.binDetails.map(bin => ({
+              bin_id: bin.bin_id,
+              location: `Latitude: ${bin.latitude}, Longitude: ${bin.longitude}`,
+              status: bin.status,
+            }))}
+          />
         </section>
       )}
 
@@ -40,79 +52,44 @@ const BinDetails = ({ data }) => {
       {data.healthBreakdown && data.healthBreakdown.length > 0 && (
         <section>
           <h3>Health Breakdown</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Community</th>
-                <th>Total Bins</th>
-                <th>Needs Maintenance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.healthBreakdown.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.community_name || 'N/A'}</td>
-                  <td>{item.total || 'N/A'}</td>
-                  <td>{item.needsMaintenance || 'N/A'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table
+            columns={['Community', 'Total Bins', 'Needs Maintenance']}
+            data={data.healthBreakdown.map(item => ({
+              community_name: item.community_name,
+              total: item.total,
+              needsMaintenance: item.needsMaintenance,
+            }))}
+          />
         </section>
       )}
+{data.activeRoutsDetails && data.activeRoutsDetails.length > 0 && (
+  <section>
+    <h3>Active Routes Details</h3>
+    <Table
+      columns={['Route', 'Location', 'Status', 'Start Time', 'End Time']}
+      data={data.activeRoutsDetails.map(route => ({
+        route: route.route,
+        location: route.location,
+        status: route.status,
+        start_time: route.start_time ? new Date(route.start_time).toLocaleString() : 'N/A',
+        end_time: route.end_time ? new Date(route.end_time).toLocaleString() : 'N/A',
+      }))}
+    />
+  </section>
+)}
 
-
-    {/* Active Routes Section */}
-    {data.activeRoutes && data.activeRoutes.length > 0 && (
-      <section>
-        <h3>Active Routes</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>Route</th>
-              <th>Location</th>
-              <th>Status</th>
-              <th>Start Time</th>
-              <th>End Time</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.activeRoutes.map((route, index) => (
-              <tr key={index}>
-                <td>{route.id|| 'N/A'}</td>
-                <td>{route.location || 'N/A'}</td>
-                <td>{route.status || 'N/A'}</td>
-                <td>{route.start_time ? new Date(route.start_time).toLocaleString() : 'N/A'}</td>
-                <td>{route.end_time ? new Date(route.end_time).toLocaleString() : 'N/A'}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
-    )}
-
-      {/* Health Breakdown Section */}
+      {/* Full Bins Breakdown Section */}
       {data.fullBins && data.fullBins.length > 0 && (
         <section>
           <h3>Full Bins Breakdown</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Community</th>
-                <th>Bin ID</th>
-                <th>Bin Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.fullBins.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.community_name || 'N/A'}</td>
-                  <td>{item.bin_id || 'N/A'}</td>
-                  <td>{item.status || 'N/A'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table
+            columns={['Community', 'Bin ID', 'Bin Status']}
+            data={data.fullBins.map(item => ({
+              community_name: item.community_name,
+              bin_id: item.bin_id,
+              status: item.status,
+            }))}
+          />
         </section>
       )}
 
@@ -120,134 +97,83 @@ const BinDetails = ({ data }) => {
       {data.historicalData && data.historicalData.length > 0 && (
         <section>
           <h3>Historical Data</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Count Per Day</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.historicalData.map((entry, index) => (
-                <tr key={index}>
-                  <td>{new Date(entry.date).toLocaleDateString() || 'N/A'}</td>
-                  <td>{entry.count_per_day  || 'N/A'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Table
+            columns={['Date', 'Count Per Day']}
+            data={data.historicalData.map(entry => ({
+              date: new Date(entry.date).toLocaleDateString(),
+              count_per_day: entry.count_per_day,
+            }))}
+          />
         </section>
       )}
 
-      {/* Location Breakdown Section */}
-      {data.locationBreakdown && data.locationBreakdown.length > 0 && (
+
+    {/* Collection History Section */}
+    {data.collectionHistory && data.collectionHistory.length > 0 && (
+      <section>
+        <h3>Collection History</h3>
+        <Table
+          columns={['Bin ID', 'Collection Date', 'Status', 'Waste Collected (kg)', 'Comments']}
+          data={data.collectionHistory.map(entry => ({
+            bin_id: entry.bin_id,
+            collection_date: new Date(entry.date).toLocaleDateString(),  // Format the date
+            status: entry.status,
+            waste_collected: entry.collected_waste_volume,  // Show the collected waste volume
+            comments: entry.comments,
+          }))}
+        />
+      </section>
+    )}
+
+
+      {/* Active Routes Details Section (Fixed typo) */}
+      {data.activeRoutesDetails && data.activeRoutesDetails.length > 0 && (
         <section>
-          <h3>Location Breakdown</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Community</th>
-                <th>Count</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.locationBreakdown.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.community_name || 'N/A'}</td>
-                  <td>{item.bin_count_per_community || 'N/A'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h3>Active Routes Details</h3>
+          <Table
+            columns={['Route', 'Location', 'Status', 'Start Time', 'End Time']}
+            data={data.activeRoutesDetails.map(route => ({
+              route: route.route,
+              location: route.location,
+              status: route.status,
+              start_time: route.start_time ? new Date(route.start_time).toLocaleString() : 'N/A',
+              end_time: route.end_time ? new Date(route.end_time).toLocaleString() : 'N/A',
+            }))}
+          />
         </section>
       )}
 
-           {/* Active Routes Section */}
-      {data.activeRoutsDetails && data.activeRoutsDetails.length > 0 && (
-        <section>
-          <table>
-            <thead>
-              <tr>
-                <th>Route</th>
-                <th>Location</th>
-                <th>Status</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.activeRoutsDetails.map((route) => (
-                <tr key={route.id}>
-                  <td>{route.route || 'N/A'}</td>
-                  <td>{route.location || 'N/A'}</td>
-                  <td>{route.status || 'N/A'}</td>
-                  <td>{route.start_time ? new Date(route.start_time).toLocaleString() : 'N/A'}</td>
-                  <td>{route.end_time ? new Date(route.end_time).toLocaleString() : 'N/A'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </section>
-      )}
-
-      {/* Full Bins Section */}
+      {/* Full Bin Details Section */}
       {data.fullBinDetails && data.fullBinDetails.length > 0 && (
         <section>
-          <table>
-            <thead>
-              <tr>
-                <th>Bin ID</th>
-                <th>Community Name</th>
-                <th>Parish</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.fullBinDetails.map((bin) => (
-                <tr key={bin.bin_id}>
-                  <td>{bin.bin_id || 'N/A'}</td>
-                  <td>{bin.community_name || 'N/A'}</td>
-                  <td> {bin.parish_name}</td>
-
-                  <td>{bin.status || 'N/A'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h3>Full Bin Details</h3>
+          <Table
+            columns={['Bin ID', 'Community Name', 'Parish', 'Status']}
+            data={data.fullBinDetails.map(bin => ({
+              bin_id: bin.bin_id,
+              community_name: bin.community_name,
+              parish_name: bin.parish_name,
+              status: bin.status,
+            }))}
+          />
         </section>
       )}
 
       {/* Near Full Bins Section */}
       {data.nearFullDetails && data.nearFullDetails.length > 0 && (
         <section>
-
-          <table>
-            <thead>
-              <tr>
-                <th>Bin ID</th>
-                <th>Community Name</th>
-                <th>Location</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.nearFullDetails.map((bin) => (
-                <tr key={bin.bin_id}>
-                  <td>{bin.bin_id || 'N/A'}</td>
-                  <td>{bin.community_name || 'N/A'}</td>
-                  <td> {bin.parish_name}</td>
-                  <td>{bin.status || 'N/A'}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <h3>Near Full Bins</h3>
+          <Table
+            columns={['Bin ID', 'Community Name', 'Location', 'Status']}
+            data={data.nearFullDetails.map(bin => ({
+              bin_id: bin.bin_id,
+              community_name: bin.community_name,
+              parish_name: bin.parish_name,
+              status: bin.status,
+            }))}
+          />
         </section>
       )}
-
-
-
-      {/* Additional Sections (Full Bins, Historical Data, etc.) */}
-      {/* Include other sections as needed */}
     </div>
   );
 };

@@ -17,6 +17,22 @@ const Map = ({ selectedParish }) => {
   const [bins, setBins] = useState([]);
   const [selectedBin, setSelectedBin] = useState(null);
 
+  // Fetch bins data
+  const fetchBinsData = async (parish) => {
+    try {
+      if (parish) {
+        const binsData = await binService.fetchBinsByParish(parish);
+        setBins(binsData);
+      } else {
+        const binsData = await binService.fetchAllBins();
+        setBins(binsData);
+      }
+    } catch (error) {
+      console.error('Error fetching bins data:', error);
+    }
+  };
+
+  // Fetch coordinates when parish is selected
   useEffect(() => {
     const fetchParishCoordinates = async () => {
       if (selectedParish) {
@@ -39,26 +55,17 @@ const Map = ({ selectedParish }) => {
     };
 
     fetchParishCoordinates();
-  }, [selectedParish]);
+  }, [selectedParish]); // Only depends on selectedParish
 
+  // Fetch bins data whenever selectedParish changes
   useEffect(() => {
-    const fetchBinsData = async () => {
-      try {
-        if (selectedParish) {
-          const binsData = await binService.fetchBinsByParish(selectedParish);
-          setBins(binsData);
-        }
-        else{
-          const binsData = await binService.fetchAllBins();
-          setBins(binsData);
-        }
-      } catch (error) {
-        console.error('Error fetching bins data:', error);
-      }
-    };
-    fetchBinsData();
-  }, [selectedParish]);
+    fetchBinsData(selectedParish); // Fetch bins based on selected parish
+    const intervalId = setInterval(() => fetchBinsData(selectedParish), 5000); // Poll every 5 seconds for updates
 
+    return () => clearInterval(intervalId); // Cleanup the interval on unmount
+  }, [selectedParish]); // Only depends on selectedParish
+
+  // Function to determine the marker color based on the status of the bin
   const getMarkerColor = (status) => {
     switch (status) {
       case 'full':
@@ -80,7 +87,7 @@ const Map = ({ selectedParish }) => {
         center={center}
         zoom={selectedParish ? 14 : 13} // Zoom in if parish is selected
       >
-        {bins.map(bin => (
+        {bins.map((bin) => (
           <Marker
             key={bin.bin_id}
             position={{

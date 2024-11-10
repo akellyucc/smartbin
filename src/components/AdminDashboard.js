@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/AdminDashboard.css'; // Assuming a separate CSS file for styling
-import { Line } from 'react-chartjs-2'; // Using Chart.js for data visualization
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import '../styles/AdminDashboard.css';
+import { Line, Bar, Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, BarElement, Title, Tooltip, Legend, ArcElement, LineElement } from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+// Registering necessary components
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  BarElement,
+  Title,
+  Tooltip,
+  Legend,
+  ArcElement,
+  LineElement // Register LineElement for Line chart
+);
 
 const AdminDashboard = () => {
   const [users, setUsers] = useState([]);
@@ -16,10 +27,9 @@ const AdminDashboard = () => {
     completedReports: 0,
   });
 
-  // Sample Data Fetch Simulation (Replace with API calls)
   useEffect(() => {
-    // Simulate fetching users and reports
     try {
+      // Simulate fetching users and reports
       setUsers([
         { id: 1, name: 'John Doe', email: 'john@example.com', role: 'User', status: 'Active' },
         { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'User', status: 'Inactive' },
@@ -28,8 +38,6 @@ const AdminDashboard = () => {
         { id: 1, title: 'Waste Collection Report - Week 1', date: '2024-10-01', status: 'Completed' },
         { id: 2, title: 'Waste Collection Report - Week 2', date: '2024-10-08', status: 'Pending' },
       ]);
-
-      // Set Analytics Data
       setAnalytics({
         totalUsers: 2,
         activeUsers: 1,
@@ -41,23 +49,25 @@ const AdminDashboard = () => {
     }
   }, []);
 
-  // Handle changing user status
   const handleUserStatusChange = (userId, newStatus) => {
-    setUsers(users.map(user => user.id === userId ? { ...user, status: newStatus } : user));
-    // Update analytics
+    const updatedUsers = users.map(user =>
+      user.id === userId ? { ...user, status: newStatus } : user
+    );
+    setUsers(updatedUsers);
+
+    // Update analytics dynamically
     setAnalytics(prev => ({
       ...prev,
-      activeUsers: users.filter(user => user.status === 'Active').length,
+      activeUsers: updatedUsers.filter(user => user.status === 'Active').length,
     }));
   };
 
-  // Line chart data for Analytics (Users over time)
-  const chartData = {
-    labels: ['Oct 1', 'Oct 2', 'Oct 3', 'Oct 4', 'Oct 5'], // Example dates
+  const chartDataUsers = {
+    labels: ['Oct 1', 'Oct 2', 'Oct 3', 'Oct 4', 'Oct 5'],
     datasets: [
       {
         label: 'Active Users',
-        data: [1, 1, 1, 1, 2], // Example number of active users over days
+        data: [1, 1, 1, 1, 2],
         borderColor: 'rgba(75, 192, 192, 1)',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
         fill: true,
@@ -65,34 +75,58 @@ const AdminDashboard = () => {
     ],
   };
 
+  const chartDataBar = {
+    labels: ['Total Users', 'Active Users'],
+    datasets: [
+      {
+        label: 'Users',
+        data: [analytics.totalUsers, analytics.activeUsers],
+        backgroundColor: ['#36a2eb', '#ff6384'],
+        borderColor: ['#36a2eb', '#ff6384'],
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const chartDataPie = {
+    labels: ['Completed Reports', 'Pending Reports'],
+    datasets: [
+      {
+        data: [analytics.completedReports, analytics.totalReports - analytics.completedReports],
+        backgroundColor: ['#36a2eb', '#ffcd56'],
+        hoverBackgroundColor: ['#36a2eb', '#ffcd56'],
+      },
+    ],
+  };
+
   return (
     <section id="admin-dashboard" className="admin-dashboard">
-      <h1>Administrator Dashboard</h1>
+      <h1>Administrator Report</h1>
 
-      {/* Analytics Overview */}
-      <div className="dashboard-overview">
-        <div className="stat-card">
-          <h3>Total Users</h3>
-          <p>{analytics.totalUsers}</p>
-        </div>
-        <div className="stat-card">
-          <h3>Active Users</h3>
-          <p>{analytics.activeUsers}</p>
-        </div>
-        <div className="stat-card">
-          <h3>Total Reports</h3>
-          <p>{analytics.totalReports}</p>
-        </div>
-        <div className="stat-card">
-          <h3>Completed Reports</h3>
-          <p>{analytics.completedReports}</p>
+      {/* Bar Chart for Total Users and Active Users */}
+      <div className="dashboard-section">
+        <h2>Users Overview</h2>
+        {/* Bar Chart Container */}
+        <div className="chart-container" style={{ height: '300px' }}>
+          <Bar data={chartDataBar} options={{ responsive: true, maintainAspectRatio: true }} />
         </div>
       </div>
 
-      {/* Chart */}
+      {/* Line Chart for Active Users Over Time */}
       <div className="dashboard-section">
         <h2>Active Users Over Time</h2>
-        <Line data={chartData} />
+        {/* Line Chart Container */}
+        <div className="chart-container">
+          <Line data={chartDataUsers} options={{ responsive: true, maintainAspectRatio: true }} />
+        </div>
+      </div>
+
+      {/* Pie Chart for Report Status */}
+      <div className="dashboard-section">
+        <h2>Report Status</h2>
+        <div className="pie-chart-container">
+          <Pie data={chartDataPie} />
+        </div>
       </div>
 
       {/* Users Section */}
@@ -116,9 +150,7 @@ const AdminDashboard = () => {
                 <td>{user.role}</td>
                 <td>{user.status}</td>
                 <td>
-                  <button
-                    onClick={() => handleUserStatusChange(user.id, user.status === 'Active' ? 'Inactive' : 'Active')}
-                  >
+                  <button onClick={() => handleUserStatusChange(user.id, user.status === 'Active' ? 'Inactive' : 'Active')}>
                     {user.status === 'Active' ? 'Deactivate' : 'Activate'}
                   </button>
                 </td>

@@ -55,7 +55,7 @@ section {
 section h2 {
     margin-bottom: 50px;
     font-size: 60px;
-    
+
 }
 
 section p {
@@ -99,12 +99,12 @@ footer p{
     margin-bottom: 2vw;
     transition: all 0.3s ease;
 }
-  
+
     #home h2:hover {
         color: #ffcc00; /* Changes color when hovered */
         transform: scale(1.1); /* Scales the text slightly on hover */
         text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-    
+
 }
     #home p{
     background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for text */
@@ -122,7 +122,7 @@ footer p{
         text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Adds subtle shadow */
         cursor: pointer; /* Changes cursor to pointer when hovering */
 
-    
+
 }
 
 
@@ -194,7 +194,7 @@ button[type="submit"] {
     cursor: pointer;
     transition: background-color 0.3s ease;
 
-    
+
 }
 
 button[type="submit"]:hover {
@@ -228,8 +228,8 @@ button[type="submit"]:active {
     font-size: 1rem;
     color: #333;
     margin-bottom: 10px;
-    
-    
+
+
 }
 
 .signup-link a {

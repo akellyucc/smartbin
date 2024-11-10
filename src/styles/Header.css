@@ -23,7 +23,7 @@
 
 .nav {
 
-  color: white;
+
   list-style-type: none;
   display: flex;
   gap: 1rem;
@@ -34,14 +34,53 @@
 .nav-item {
   position: relative;
 
+
+}
+/* Base styles for navigation links */
+.nav-links {
+  color: #ffffff;            /* White text for contrast */
+  background-color: #00bff; /* Professional blue background */
+  font-size: 1rem;           /* Font size */
+  text-decoration: none;     /* Remove underline */
+  display: inline-block;     /* Display links inline */
+  font-weight: 600;          /* Slightly bolder text for better readability */
+  transition: all 0.3s ease; /* Smooth transition for hover and active states */
+  border-radius: 5px;        /* Rounded corners for a softer appearance */
+  letter-spacing: 0.5px;     /* Slight letter spacing for readability */
+  text-transform: uppercase; /* Uppercase text for a more professional appearance */
 }
 
-.nav-link {
+/* Hover state for navigation links */
+.nav-links:hover {
+  color: #f1f1f1;             /* Slightly lighter text color on hover */
+  background-color: #4a90e2;  /* Background color change on hover */
+  transform: translateY(-4px); /* Slight upward movement for a more subtle hover effect */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Subtle shadow effect for more depth */
+}
+
+/* Active state for navigation links */
+.nav-links:active {
+  background-color: #1068f3;
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Focus state for accessibility */
+.nav-links:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(72, 144, 226, 0.5);
+  border: 1px solid #007bff;
+}
+
+
+.nav-links.active {
+  background-color: #007bff;
   color: white;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
+}
+
+/* Accessibility improvements */
+.nav-links:focus-visible {
+  box-shadow: 0 0 0 3px rgba(72, 144, 226, 0.7);
 }
 
 /* Location Dropdown */
@@ -59,7 +98,7 @@
 }
 
 .parish-menu {
-  background-color: #2C3E50;
+  background-color: rgba(72, 144, 226, 0.7);
   padding-left: 1rem;
 }
 
@@ -73,7 +112,7 @@
 }
 
 .dropdown-item:hover {
-  background-color: #16A085;
+  background-color: #34495E;
 }
 
 /* Parish Item */

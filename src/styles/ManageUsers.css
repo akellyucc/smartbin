@@ -1,30 +1,219 @@
-.manage-users {
-  margin: 30px auto;
-  max-width: 900px;
-  padding: 20px;
-  background-color: #f4f4f9;
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeInOverlay 0.3s ease-out;
+}
+
+/* Modal content box */
+.modal-content {
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  width: 350px;  /* More compact width for the modal */
+  max-width: 90%;  /* Make sure it doesn't stretch too wide on mobile */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  animation: fadeInModal 0.3s ease-out;
+}
+
+.modal-content h2 {
+  margin-bottom: 15px;
+  font-size: 1.6rem;
+  color: #333;
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  color: #555;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.save-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+/* Save button styling */
+.save-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #45a049;
+}
+
+/* Cancel button styling */
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #e53935;
+}
+
+/* Confirmation modal styling */
+.confirmation-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px 25px;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 350px;  /* Adjusted confirmation modal width */
+  z-index: 1000;
+  animation: fadeInModal 0.3s ease-out;
 }
 
-.manage-users-container h2 {
-  color: #333;
+.confirmation-modal p {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.1rem;
 }
+
+.confirmation-modal button {
+  width: 45%;
+  margin: 0 10px;
+  display: inline-block;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.confirm-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.confirm-btn:hover {
+  background-color: #45a049;
+}
+
+.cancel-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.cancel-btn:hover {
+  background-color: #e53935;
+}
+
+/* Modal backdrop for regular modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+/* Animations */
+@keyframes fadeInOverlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInModal {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+/* Add custom styles for the button */
+.add-user-btn {
+  margin-bottom:20px;
+  padding: 10px 20px;
+  background-color: #36a2eb;
+
+
+  font-size: 19px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-user-btn:hover {
+  background-color: #2980b9;
+}
+/* Mobile adjustments */
+@media (max-width: 600px) {
+  .modal-content {
+    width: 90%;  /* Ensures it scales properly on mobile */
+  }
+  .confirmation-modal {
+    width: 60%;
+  }
+}
+/* In your AdminDashboard.css or a separate CSS file */
+
+.users-table {
+  width: 100%;           /* Full width of its container, adjust as needed */
+  max-width: 1200px;      /* Maximum width of the table */
+  margin: 0 auto;
+         /* Center the table horizontally */
+  border-collapse: collapse; /* Collapse borders between table cells */
+}
+
+.users-table th, .users-table td {
+  padding: 12px;         /* Padding inside table cells */
+  text-align: left;      /* Align text to the left */
+  border: 1px solid #ddd; /* Light gray border */
+}
+
 .users-table th {
-    background-color: #4CAF50;
-
-}
-.manage-users-container button {
-  font-weight: bold;
+  background-color: #f2f2f2; /* Light gray background for header */
 }
 
-.manage-users-container .table {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+.users-table td {
+  background-color: #ffffff; /* White background for data cells */
 }
 
-.manage-users-container .modal-title {
-  font-size: 1.25rem;
-  font-weight: bold;
+.users-table tr:hover {
+  background-color: #f5f5f5; /* Light gray hover effect */
 }

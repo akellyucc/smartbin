@@ -7,7 +7,7 @@
   border: 1px solid #ddd; /* Add border for separation */
   border-radius: 5px; /* Rounded corners */
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-  background-color: #ffffff; /* White background for clarity */
+  background-color: gray; /* White background for clarity */
 }
 
 h3 {
@@ -32,7 +32,7 @@ th, td {
 
 th {
   background-color: #007bff; /* Blue header background */
-  color: white;
+  color: black;
   position: sticky; /* Fix header on scroll */
   top: 0; /* Sticky position */
   z-index: 10; /* Ensure header stays on top */

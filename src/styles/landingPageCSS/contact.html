@@ -12,7 +12,7 @@
             <div class="logo">
                 <video autoplay muted loop id="logo-video">
                     <source src="W5.mp4" type="video/mp4">
-                   
+
                 </video>
                 <h1>Waste Management Servies</h1>
             </div>
@@ -49,8 +49,8 @@
 
     </section>
 
-    
-    
+
+
     <section id="newsletter">
         <h3>Sign Up for Our Newsletter</h3>
         <form id="newsletter-form">
@@ -68,15 +68,15 @@
 </body>
 
     <script>
-        
+
         const form = document.getElementById('contact-form');
         const successMessage = document.getElementById('success-message');
-    
-        
+
+
         form.addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent the form from submitting the default way
-    
-           
+
+
     const name = document.getElementById('name').value.trim();
     const email = document.getElementById('email').value.trim();
     const message = document.getElementById('message').value.trim();
@@ -87,13 +87,13 @@
         return;
     }
 
-    // Email validation 
+    // Email validation
     const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
     if (!email.match(emailPattern)) {
         alert('Please enter a valid email address.');
         return;
     }
- 
+
   successMessage.style.display = 'block';
 
 
@@ -104,7 +104,7 @@ form.reset();
 function subscribeNewsletter() {
             const newsletterEmail = document.getElementById('newsletter-email').value.trim();
             const newsletterSuccessMessage = document.getElementById('newsletter-success');
-            
+
             if (newsletterEmail === "") {
                 alert("Please enter your email.");
                 return;
@@ -115,7 +115,7 @@ function subscribeNewsletter() {
                 alert("Please enter a valid email address.");
                 return;
             }
-            
+
             newsletterSuccessMessage.style.display = 'block';
             document.getElementById('newsletter-form').reset();
         }
@@ -126,6 +126,6 @@ function subscribeNewsletter() {
     <footer>
         <p>&copy; 2024 Waste Management. All rights reserved.</p>
     </footer>
-        
+
 </body>
 </html>

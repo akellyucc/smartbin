@@ -32,8 +32,12 @@ const Login = ({ onLogin }) => {
         // Call the onLogin callback with the user data
         onLogin(user);
 
-        // Optionally, redirect to the dashboard or another protected route
-        window.location.href = '/dashboard'; // Adjust this as needed
+        // Redirect based on user role
+        if (user.role === 'Guest') {
+          window.location.href = '/services'; // Redirect to the services page for guest users
+        } else {
+          window.location.href = '/dashboard'; // Redirect to dashboard for other users
+        }
       }
     } catch (error) {
       // If the login fails, display the error message
@@ -76,7 +80,7 @@ const Login = ({ onLogin }) => {
         </p>
       </form>
       <p className="signup-link">
-        Don't have an account? <a href="signup.html">Sign Up</a>
+        Don't have an account? <a href="signup">Sign Up</a>
       </p>
     </section>
   );

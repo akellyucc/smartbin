@@ -65,3 +65,44 @@ button:active {
   font-size: 1.2rem;
   margin-top: 20px;
 }
+.dashboard-section {
+  margin-bottom: 30px;
+}
+
+.stat-card {
+  background: #f4f4f4;
+  padding: 20px;
+  margin: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.users-table, .reports-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.users-table th, .reports-table th, .users-table td, .reports-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+button {
+  padding: 8px 12px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+.pie-chart-container {
+  position: relative;
+  max-width: 400px; /* Adjust to control the size */
+  height: 300px;    /* Set height */
+  margin: 20px auto; /* Centers the chart */
+}
+
+.pie-chart-container canvas {
+  width: 100% !important;  /* Ensure canvas fills the container */
+  height: 100% !important; /* Ensure canvas maintains its aspect ratio */
+}
